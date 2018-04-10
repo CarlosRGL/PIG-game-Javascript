@@ -32,7 +32,100 @@ Hints to dev
     -update the UI
     -check if player won the game
     -change to next player if active player dont won
-3.- DRY principle
-
-
+    -hide Dice and circle active player (winner class)
+3.- add functionality to new game button (init function)
+  3.1 reset all scores / hide Dice
+  3.2 change names to init state
+  3.3 remove winner class and active class
+  3.4 set player 0 to active player
+4.- State variable -> is game playing
+5.- DRY principle
 */
+
+var scores, activePlayer, roundScore, dice, nextPlayer;
+
+init();
+
+document.querySelector('.btn-roll').addEventListener('click', function() {
+  if (gamePlaying) {
+    //Get Random number to the dice
+    dice = Math.floor(Math.random() * 6) + 1;
+
+    // Show Dice
+    document.querySelector('.dice').style.display = 'block';
+
+    // Change Dice img
+    document.querySelector('.dice').src = 'dice-' + dice + '.png';
+    // Add Score to Round score if dice isnt 1 else, change active player
+    if (dice !== 1) {
+      roundScore += dice;
+      document.getElementById(
+        'current-' + activePlayer
+      ).textContent = roundScore;
+    } else {
+      nextPlayer();
+    }
+  }
+});
+
+document.querySelector('.btn-hold').addEventListener('click', function() {
+  if (gamePlaying) {
+    // Add round score to global score
+    scores[activePlayer] += roundScore;
+    document.getElementById('score-' + activePlayer).textContent =
+      scores[activePlayer];
+
+    if (scores[activePlayer] >= 20) {
+      document.getElementById('name-' + activePlayer).textContent = 'WINNER!!!';
+      document
+        .querySelector('.player-' + activePlayer + '-panel')
+        .classList.add('winner');
+      document
+        .querySelector('.player-' + activePlayer + '-panel')
+        .classList.remove('active');
+      document.querySelector('.dice').style.display = 'none';
+      gamePlaying = false;
+    } else {
+      nextPlayer();
+    }
+  }
+});
+
+document.querySelector('.btn-new').addEventListener('click', init);
+
+// Create function Nextplayer
+nextPlayer = function() {
+  document.getElementById('current-' + activePlayer).textContent = '0';
+  activePlayer == 0 ? (activePlayer = 1) : (activePlayer = 0);
+  document.querySelector('.dice').style.display = 'none';
+  document.querySelector('.player-0-panel').classList.toggle('active');
+  document.querySelector('.player-1-panel').classList.toggle('active');
+};
+
+function init() {
+  scores = [0, 0];
+  activePlayer = 0;
+  roundScore = 0;
+  gamePlaying = true;
+
+  // Set Global score to 0
+  document.getElementById('score-0').textContent = '0';
+  document.getElementById('score-1').textContent = '0';
+
+  // Set Round Score to 0
+  document.getElementById('current-0').textContent = '0';
+  document.getElementById('current-1').textContent = '0';
+
+  // Hide dice
+  document.querySelector('.dice').style.display = 'none';
+
+  document.getElementById('name-1').textContent = 'player 2';
+  document.getElementById('name-0').textContent = 'player 1';
+  document.querySelector('.player-0-panel').classList.remove('winner');
+  document.querySelector('.player-1-panel').classList.remove('winner');
+  document.querySelector('.player-0-panel').classList.remove('active');
+  document.querySelector('.player-1-panel').classList.remove('active');
+  document.querySelector('.player-0-panel').classList.add('active');
+
+  console.log('name-' + activePlayer);
+}
