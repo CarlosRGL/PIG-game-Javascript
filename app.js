@@ -70,11 +70,6 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     } else {
       nextPlayer();
     }
-
-    if () {
-      console.log('losse');
-
-    }
   }
 });
 
