@@ -48,8 +48,11 @@ init();
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
   if (gamePlaying) {
+    var previusDice = dice;
     //Get Random number to the dice
     dice = Math.floor(Math.random() * 6) + 1;
+    console.log(previusDice);
+    console.log(dice);
 
     // Show Dice
     document.querySelector('.dice').style.display = 'block';
@@ -57,13 +60,20 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     // Change Dice img
     document.querySelector('.dice').src = 'dice-' + dice + '.png';
     // Add Score to Round score if dice isnt 1 else, change active player
-    if (dice !== 1) {
+
+    //challenge 1 : if 2 Dice in a row = 6 next player
+    if (dice !== 1 && (previusDice !== 6 && dice !== 6)) {
       roundScore += dice;
       document.getElementById(
         'current-' + activePlayer
       ).textContent = roundScore;
     } else {
       nextPlayer();
+    }
+
+    if () {
+      console.log('losse');
+
     }
   }
 });
